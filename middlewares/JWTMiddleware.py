@@ -1,6 +1,8 @@
 from fastapi import Header, HTTPException
 
-from services.AuthService import decode_jwt
+from services.AuthService import AuthService
+
+authService = AuthService()
 
 
 async def check_jwt_token(auth: str = Header(default='')):
@@ -8,7 +10,7 @@ async def check_jwt_token(auth: str = Header(default='')):
         raise HTTPException(status_code=401, detail='invalid token')
 
     token = auth.split(' ')[1]
-    payload = decode_jwt(token)
+    payload = authService.decode_jwt(token)
 
     if not payload:
         raise HTTPException(status_code=401, detail='invalid token or expired')
